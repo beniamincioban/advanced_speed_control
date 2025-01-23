@@ -1,0 +1,13 @@
+k = [1];
+z = [0 0];
+p = [-1/30 -1/30 -1/30 -1/30];
+H = zpk(z,p,k);
+Ts = 0.5;
+t = out.tout;
+X = out.u_signal.signals.values(1:1001)';
+T = lsim(X,t,H)';
+XTrain = num2cell(X);
+TTrain = num2cell(T);
+net = narxnet(1:4,1:4,11);
+[Xs,Xi,Ai,Ts] = preparets(net,XTrain,{},TTrain);
+net = train(net,Xs,Ts,Xi,Ai);
